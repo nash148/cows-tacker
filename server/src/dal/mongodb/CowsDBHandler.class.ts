@@ -1,10 +1,10 @@
 import { connect } from 'mongoose';
 
-import { CowModel } from './CowSchema';
-import { IDBAccess } from '../IDBAccess.interface';
+import { CowModel } from './CowModel';
+import { ICowsDBHandler } from '../ICowsDBHandler.interface';
 import { ICow } from '../../common/interfaces/ICow.interface';
 
-export class CowsDBHandler implements IDBAccess {
+export class CowsDBHandler implements ICowsDBHandler {
   constructor() {
     connect("mongodb+srv://nash148:zq8paKYpxJcaW75@application.aesyb.mongodb.net/CowsTracker?retryWrites=true&w=majority")
   }

@@ -2,7 +2,6 @@ import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CowsService } from '../services/cows.service';
 import { ICow } from '../common/interfaces/ICow.interface';
-import { CowsDBHandler } from '../dal/mongodb/CowsDBHandler.class';
 import { CowDto } from './validations/DTOs/CowDto';
 import { IdParam } from './validations/Params/IdParam';
 
@@ -11,8 +10,7 @@ export class CowController {
   cowsService: CowsService;
 
   constructor() {
-    const dbHandler = new CowsDBHandler()
-    this.cowsService = new CowsService(dbHandler)
+    this.cowsService = CowsService.getInstance()
   };
 
   @Get()

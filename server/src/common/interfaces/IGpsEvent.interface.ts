@@ -1,7 +1,7 @@
 export interface IGpsEvent {
-  timestamp: Date;
-  lon: number;
-  lat: number;
-  wt: number;
-  battery: number;
+  cowId: string;
+  timestamp: string;
+  latLong?: string;
+  wt: string;
+  battery: string;
 }
