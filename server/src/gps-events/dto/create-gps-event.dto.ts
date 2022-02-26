@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsString, IsDateString, IsLatLong } from 'class-validator';
+import { IsNotEmpty, IsString, IsDateString, IsLatLong, IsNumber } from 'class-validator';
 
-export class GpsEventDto {
+export class CreateGpsEventDto {
   @IsNotEmpty()
   @IsString()
   cowId: string;
@@ -19,4 +19,8 @@ export class GpsEventDto {
   @IsNotEmpty()
   @IsString()
   battery: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  counter: number;
 };

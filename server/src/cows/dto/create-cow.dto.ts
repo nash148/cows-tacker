@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class CowDto {
+export class CreateCowDto {
   @IsNotEmpty()
-  id: string;
+  readonly cowId: string;
 };
