@@ -4,10 +4,11 @@ import { GpsEventsController } from './gps-events.controller';
 import { GpsEventsService } from './gps-events.service';
 import { GpsEventSchema } from './schemas/gps-event.schema';
 import { CowsModule } from '../cows/cows.module';
+import { GpsEventsGateway } from './gps-events.gateway';
 
 @Module({
   imports: [CowsModule, MongooseModule.forFeature([{ name: 'GpsEvent', schema: GpsEventSchema }])],
   controllers: [GpsEventsController],
-  providers: [GpsEventsService],
+  providers: [GpsEventsService, GpsEventsGateway],
 })
 export class GpsEventsModule {}
