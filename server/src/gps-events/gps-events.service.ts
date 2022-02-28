@@ -21,6 +21,10 @@ export class GpsEventsService {
     return await this.gpsEventModel.findOne({ _id: id });
   }
 
+  async findByCowId(cowId: string): Promise<GpsEvent[]> {
+    return await this.gpsEventModel.find({ cowId });
+  }
+
   async create(gpsEvent: GpsEvent): Promise<GpsEvent> {
     await this.cowsService.createIfNotExist(gpsEvent.cowId);
     this.emitGpsEvent(gpsEvent);

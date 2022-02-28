@@ -26,6 +26,11 @@ export class GpsEventsController {
     return this.gpsEventsService.findOne(id);
   }
 
+  @Get('by-cow-id/:cowId')
+  findByCowId(@Param('cowId') cowId: string): Promise<GpsEvent[]> {
+    return this.gpsEventsService.findByCowId(cowId);
+  }
+
   @Post()
   create(@Body() createGpsEvent: CreateGpsEventDto): Promise<GpsEvent> {
     return this.gpsEventsService.create(createGpsEvent);
