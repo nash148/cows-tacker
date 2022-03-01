@@ -7,5 +7,6 @@ export const GpsEventSchema = new mongoose.Schema<GpsEvent>({
   timestamp: { type: String, required: true },
   latLong: { type: String, required: false },
   wt: { type: String, required: true },
-  battery: {type: String, required: true}
+  battery: {type: String, required: true},
+  counter: {type: Number, required: true}
 }, { collection: 'gpsEvents'});
