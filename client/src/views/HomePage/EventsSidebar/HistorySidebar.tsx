@@ -32,7 +32,7 @@ const HistorySidebar = (props: Props) => {
             >
 
             </Box>
-            <EventsTable cowId={cowId} rows={events} />
+            <EventsTable cowId={cowId} rows={events} onClose={onClose} />
           </Drawer>
         </>
     </div>

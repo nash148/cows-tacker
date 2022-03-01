@@ -7,8 +7,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import CloseIcon from '@mui/icons-material/Close';
 import { GpsEvent } from '../../../../common/interfaces/gps-event.interface';
-import { Toolbar, Typography } from '@mui/material';
+import { IconButton, Toolbar, Typography } from '@mui/material';
 
 interface Column {
   id: 'timestamp' | 'wt' | 'battery' | 'counter';
@@ -35,10 +36,11 @@ interface Data {
 interface Props {
   rows: GpsEvent[];
   cowId: string;
+  onClose: () => void;
 }
 
 const EventsTable = (props: Props) => {
-  const { rows, cowId } = props;
+  const { rows, cowId, onClose } = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -53,16 +55,7 @@ const EventsTable = (props: Props) => {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <Toolbar
-        // sx={{
-        //   pl: { sm: 2 },
-        //   pr: { xs: 1, sm: 1 },
-        //   ...(numSelected > 0 && {
-        //     bgcolor: (theme) =>
-        //       alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        //   }),
-        // }}
-      >
+      <Toolbar>
         <Typography
           sx={{ flex: '1 1 100%' }}
           variant="h6"
@@ -71,6 +64,9 @@ const EventsTable = (props: Props) => {
         >
           History of {cowId}
         </Typography>
+        <IconButton onClick={() => onClose()}>
+          <CloseIcon />
+        </IconButton>
       </Toolbar>
       <TableContainer sx={{ maxHeight: 640, maxWidth: 440 }}>
         <Table size='small' stickyHeader aria-label="sticky table">
