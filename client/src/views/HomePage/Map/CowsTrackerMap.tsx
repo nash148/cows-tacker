@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap, useMapEvent } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import Typography from '@mui/material/Typography';
 import 'leaflet/dist/leaflet.css';
@@ -20,6 +20,17 @@ interface Props {
 const CowsTrackerMap = (props: Props) => {
   const { gpsEvents, showEventsHistory } = props;
   const [center, setCenter] = useState<LatLngExpression>([31.778345, 35.225079]);
+
+  const initCenter = () => {
+    if (Object.values(gpsEvents).length > 0 && Object.values(gpsEvents)[0].latLong) {
+      const tmpCenter = Object.values(gpsEvents)[0].latLong!.split(',').map(tt => +tt) as LatLngExpression
+      setCenter(tmpCenter)
+    }
+  }
+  
+  useEffect(() => {
+    initCenter();
+  }, [])
   
   return (
     <>
