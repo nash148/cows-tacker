@@ -38,7 +38,6 @@ function HomePage() {
 
     cows.map(async cow => {
       const event = await GpsEventsApi.getOneByCowId(cow.cowId);
-      console.log('event', event)
       setGpsEvents(prevState => ({
         ...prevState,
         [event.cowId]: event
