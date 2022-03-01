@@ -14,10 +14,11 @@ let CowIcon = L.icon({
 
 interface Props {
   gpsEvents: { [cowId: string]: GpsEvent },
+  showEventsHistory: (cowId: string) => void; 
 }
 
-function CowsTrackerMap(props: Props) {
-  const { gpsEvents } = props;
+const CowsTrackerMap = (props: Props) => {
+  const { gpsEvents, showEventsHistory } = props;
   const [center, setCenter] = useState<LatLngExpression>([31.778345, 35.225079]);
   
   return (
@@ -40,12 +41,15 @@ function CowsTrackerMap(props: Props) {
                       icon={ CowIcon } 
                       position={event.latLong.split(',').map(tt => +tt) as LatLngExpression}
                       riseOnHover={true}
+                      eventHandlers={{
+                        click: () => showEventsHistory(event.cowId)
+                      }}
                     >
                       <Tooltip
                         permanent
                         key={key}
                       >
-                        <Typography fontWeight="bold" variant="caption" display="block" gutterBottom>
+                        <Typography key={key} fontWeight="bold" variant="caption" display="block" gutterBottom>
                           {event.cowId} | {event.timestamp}
                         </Typography>
                       </Tooltip>
