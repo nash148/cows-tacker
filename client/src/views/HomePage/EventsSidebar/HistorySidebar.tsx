@@ -5,15 +5,17 @@ import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material';
 import EventsTable from './EventsTable/EventsTable';
 import { GpsEvent } from '../../../common/interfaces/gps-event.interface';
+import { LatLngBoundsExpression, LatLngExpression } from 'leaflet';
 
 interface Props {
   cowId: string;
   events: GpsEvent[];
   onClose: () => void;
+  setTmpPoint: (point: LatLngExpression) => void;
 }
 
 const HistorySidebar = (props: Props) => {
-  const { events, onClose, cowId } = props;
+  const { events, onClose, cowId, setTmpPoint } = props;
 
 
   return (
@@ -32,7 +34,7 @@ const HistorySidebar = (props: Props) => {
             >
 
             </Box>
-            <EventsTable cowId={cowId} rows={events} onClose={onClose} />
+            <EventsTable setTmpPoint={setTmpPoint} cowId={cowId} rows={events} onClose={onClose} />
           </Drawer>
         </>
     </div>

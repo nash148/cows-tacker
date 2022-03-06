@@ -4,10 +4,17 @@ import L, { LatLngExpression } from 'leaflet';
 import Typography from '@mui/material/Typography';
 import 'leaflet/dist/leaflet.css';
 import icon from '../../../assets/cow.png';
+import defaultIcon from '../../../assets/marker-icon.png';
 import { GpsEvent } from '../../../common/interfaces/gps-event.interface';
 
-let CowIcon = L.icon({
+const CowIcon = L.icon({
   iconUrl: icon,
+  iconSize: [24, 30],
+  iconAnchor: [7, 10]
+});
+
+const DefaultIcon = L.icon({
+  iconUrl: defaultIcon,
   iconSize: [24, 30],
   iconAnchor: [7, 10]
 });
@@ -15,15 +22,16 @@ let CowIcon = L.icon({
 interface Props {
   gpsEvents: { [cowId: string]: GpsEvent },
   showEventsHistory: (cowId: string) => void; 
+  tmpPoint: LatLngExpression | undefined
 }
 
 const CowsTrackerMap = (props: Props) => {
-  const { gpsEvents, showEventsHistory } = props;
-  const [center, setCenter] = useState<LatLngExpression>([31.778345, 35.225079]);
+  const { gpsEvents, showEventsHistory, tmpPoint } = props;
+  const [center, setCenter] = useState<LatLngExpression>([35.225079, 31.778345]);
 
   const initCenter = () => {
     if (Object.values(gpsEvents).length > 0 && Object.values(gpsEvents)[0].latLong) {
-      const tmpCenter = Object.values(gpsEvents)[0].latLong!.split(',').map(tt => +tt) as LatLngExpression
+      const tmpCenter = Object.values(gpsEvents)[0].latLong as LatLngExpression
       setCenter(tmpCenter)
     }
   }
@@ -45,12 +53,12 @@ const CowsTrackerMap = (props: Props) => {
             return (
               <>
               {
-                event.latLong && 
+                event.latLong && event.latLong.length > 0 && 
                   <>
                     <Marker 
                       key={key} 
                       icon={ CowIcon } 
-                      position={event.latLong.split(',').map(tt => +tt) as LatLngExpression}
+                      position={event.latLong as LatLngExpression}
                       riseOnHover={true}
                       eventHandlers={{
                         click: () => showEventsHistory(event.cowId)
@@ -70,6 +78,14 @@ const CowsTrackerMap = (props: Props) => {
               </>
             )
           })
+        }
+
+        {
+          tmpPoint &&
+          <Marker
+            icon={ DefaultIcon } 
+            position={tmpPoint}
+          />
         }
       </MapContainer>
     </>

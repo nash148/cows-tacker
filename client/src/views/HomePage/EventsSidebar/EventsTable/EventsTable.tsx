@@ -10,9 +10,10 @@ import TableRow from '@mui/material/TableRow';
 import CloseIcon from '@mui/icons-material/Close';
 import { GpsEvent } from '../../../../common/interfaces/gps-event.interface';
 import { IconButton, Toolbar, Typography } from '@mui/material';
+import { LatLngExpression } from 'leaflet';
 
 interface Column {
-  id: 'timestamp' | 'wt' | 'battery' | 'counter';
+  id: 'timestamp' | 'tw' | 'battery' | 'counter';
   label: string;
   minWidth?: number;
   align?: 'right';
@@ -21,7 +22,7 @@ interface Column {
 
 const columns: readonly Column[] = [
   { id: 'timestamp', label: 'Timestamp', minWidth: 140 },
-  { id: 'wt', label: 'wt', minWidth: 50 },
+  { id: 'tw', label: 'tw', minWidth: 50 },
   { id: 'battery', label: 'Battery', minWidth: 50 },
   { id: 'counter', label: 'Counter', minWidth: 50 },
 ];
@@ -37,10 +38,11 @@ interface Props {
   rows: GpsEvent[];
   cowId: string;
   onClose: () => void;
+  setTmpPoint: (point: LatLngExpression) => void;
 }
 
 const EventsTable = (props: Props) => {
-  const { rows, cowId, onClose } = props;
+  const { rows, cowId, onClose, setTmpPoint } = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -88,7 +90,16 @@ const EventsTable = (props: Props) => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, key) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={key}>
+                  <TableRow 
+                    hover 
+                    role="checkbox" 
+                    tabIndex={-1} 
+                    key={key}
+                    onClick={() => {
+                      row.latLong.length > 0 &&  setTmpPoint(row.latLong as LatLngExpression)
+                      onClose()
+                    }}
+                  >
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (

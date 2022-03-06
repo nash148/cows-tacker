@@ -5,6 +5,7 @@ import * as GpsEventsApi from '../../services/gps-events.api';
 import * as CowsApi from '../../services/cows.api';
 import CowsTrackerMap from './Map/CowsTrackerMap';
 import HistorySidebar from './EventsSidebar/HistorySidebar';
+import { LatLngExpression } from 'leaflet';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL as string;
 
@@ -14,6 +15,7 @@ socket.connect()
 function HomePage() {
   const [eventsHistory, setEventsHistory] = useState<GpsEvent[] | undefined>();
   const [historyCowId, setHistoryCowId] = useState<string | undefined>();
+  const [tmpPoint, setTmpPoint] = useState<LatLngExpression | undefined>();
   const [gpsEvents, setGpsEvents] = useState<{ [cowId: string]: GpsEvent }>({
     // '002': {
     //   cowId: "002",
@@ -37,7 +39,16 @@ function HomePage() {
     const cows = await CowsApi.getAll();
 
     cows.map(async cow => {
-      const event = await GpsEventsApi.getOneByCowId(cow.cowId);
+      let event = await GpsEventsApi.getOneByCowId(cow.cowId);
+
+      // If the last event has no gps, search for the last event with gps by cow id
+      if (!event.latLong || event.latLong.length === 0) {
+        const lastGpsEvent = await searchForLastGpsForCow(event.cowId);
+        if (lastGpsEvent) {
+          event = lastGpsEvent
+        }
+      }
+
       setGpsEvents(prevState => ({
         ...prevState,
         [event.cowId]: event
@@ -45,12 +56,21 @@ function HomePage() {
     })
   }
 
+  const searchForLastGpsForCow = async (cowId: string): Promise<undefined | GpsEvent> => {
+    const events  = await GpsEventsApi.getByCowId(cowId);
+    const lastGps = events.find(event => event.latLong && event.latLong.length > 0);
+    return lastGps;
+  }
+
   const startListenToGpsEvents = () => {
     socket.on('gps-event', (event: GpsEvent) => {
-      setGpsEvents(prevState => ({
-        ...prevState,
-        [event.cowId]: event
-      }))
+      // Update only of there is gps 
+      if (event.latLong && event.latLong.length > 0) {
+        setGpsEvents(prevState => ({
+          ...prevState,
+          [event.cowId]: event
+        }))
+      }
     })
   }
 
@@ -75,6 +95,7 @@ function HomePage() {
       <CowsTrackerMap 
         gpsEvents={gpsEvents}
         showEventsHistory={showEventsHistory}
+        tmpPoint={tmpPoint}
       />
 
       {
@@ -83,6 +104,7 @@ function HomePage() {
           events={eventsHistory} 
           onClose={onCloseHistory} 
           cowId={historyCowId}
+          setTmpPoint={setTmpPoint}
         />
       }
     </>
