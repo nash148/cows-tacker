@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsDateString, IsLatLong, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsArray, IsOptional } from 'class-validator';
 
 export class CreateGpsEventDto {
   @IsNotEmpty()
@@ -6,15 +6,16 @@ export class CreateGpsEventDto {
   cowId: string;
 
   @IsNotEmpty()
-  @IsDateString()
-  timestamp: string;
+  @IsNumber()
+  timestamp: number;
 
-  @IsLatLong()
-  latLong?: string;
+  @IsArray()
+  @IsOptional()
+  latLong?: number[];
 
   @IsNotEmpty()
   @IsString()
-  wt: string;
+  tw: string;
 
   @IsNotEmpty()
   @IsString()

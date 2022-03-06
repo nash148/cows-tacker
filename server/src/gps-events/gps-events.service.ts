@@ -22,11 +22,11 @@ export class GpsEventsService {
   }
 
   async findByCowId(cowId: string): Promise<GpsEvent[]> {
-    return await this.gpsEventModel.find({ cowId });
+    return await this.gpsEventModel.find({ cowId }).sort({ $natural: -1 });
   }
 
-  async findOneByCowId(cowId: string): Promise<GpsEvent[]> {
-    return await this.gpsEventModel.findOne({ cowId });
+  async findOneByCowId(cowId: string): Promise<GpsEvent> {
+    return await this.gpsEventModel.findOne({ cowId }).sort({ $natural: -1 });
   }
 
   async create(gpsEvent: GpsEvent): Promise<GpsEvent> {

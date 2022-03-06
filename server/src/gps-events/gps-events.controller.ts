@@ -32,7 +32,7 @@ export class GpsEventsController {
   }
 
   @Get('find-one-by-cow-id/:cowId')
-  findOneByCowId(@Param('cowId') cowId: string): Promise<GpsEvent[]> {
+  findOneByCowId(@Param('cowId') cowId: string): Promise<GpsEvent> {
     return this.gpsEventsService.findOneByCowId(cowId);
   }
 

@@ -1,8 +1,8 @@
 export interface GpsEvent {
   cowId: string;
-  timestamp: string;
-  latLong?: string;
-  wt: string;
+  timestamp: number;
+  latLong?: number[];
+  tw: string;
   battery: string;
   counter: number;
 }
