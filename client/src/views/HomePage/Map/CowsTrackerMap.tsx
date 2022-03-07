@@ -22,12 +22,15 @@ const DefaultIcon = L.icon({
 interface Props {
   gpsEvents: { [cowId: string]: GpsEvent },
   showEventsHistory: (cowId: string) => void; 
-  tmpPoint: LatLngExpression | undefined
+  tmpPoint: LatLngExpression | undefined;
+  timeout: number;
 }
 
 const CowsTrackerMap = (props: Props) => {
-  const { gpsEvents, showEventsHistory, tmpPoint } = props;
-  const [center, setCenter] = useState<LatLngExpression>([35.225079, 31.778345]);
+  const { gpsEvents, showEventsHistory, tmpPoint, timeout } = props;
+  const [center, setCenter] = useState<LatLngExpression>([32.062725, 34.806061]);
+  const [warnMapping, setWarnMapping] = useState<{ [cowId: string]: Boolean }>({})
+  const [currDate, setCurrDate] = useState(Date.now());
 
   const initCenter = () => {
     if (Object.values(gpsEvents).length > 0 && Object.values(gpsEvents)[0].latLong) {
@@ -35,10 +38,28 @@ const CowsTrackerMap = (props: Props) => {
       setCenter(tmpCenter)
     }
   }
+
+  const initIsWarn = () => {
+    Object.values(gpsEvents).map(event => {
+      setWarnMapping(prevState => ({
+        ...prevState,
+        [event.cowId]: (currDate - event.timestamp) > (timeout * 60000)
+      }))
+    })
+  }
+
   
   useEffect(() => {
     initCenter();
+
+    setInterval(() => {
+      setCurrDate(Date.now());
+    }, 2000)
   }, [])
+
+  useEffect(() => {
+    initIsWarn();
+  }, [currDate])
   
   return (
     <>
@@ -68,9 +89,17 @@ const CowsTrackerMap = (props: Props) => {
                         permanent
                         key={key}
                       >
-                        <Typography key={key} fontWeight="bold" variant="caption" display="block" gutterBottom>
-                          {event.cowId} | {event.timestamp}
-                        </Typography>
+                        {
+                          <Typography 
+                            key={key} 
+                            fontWeight="bold" 
+                            variant="caption"
+                            color={warnMapping[event.cowId] ? 'red' : 'black'}
+                            display="block" 
+                            gutterBottom>
+                            {event.cowId}
+                          </Typography>
+                        }
                       </Tooltip>
                     </Marker>
                   </>

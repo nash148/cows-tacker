@@ -5,6 +5,7 @@ import * as GpsEventsApi from '../../services/gps-events.api';
 import * as CowsApi from '../../services/cows.api';
 import CowsTrackerMap from './Map/CowsTrackerMap';
 import HistorySidebar from './EventsSidebar/HistorySidebar';
+import SettingsWindow from './SettingsWindow/SettingsWindow';
 import { LatLngExpression } from 'leaflet';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL as string;
@@ -16,6 +17,7 @@ function HomePage() {
   const [eventsHistory, setEventsHistory] = useState<GpsEvent[] | undefined>();
   const [historyCowId, setHistoryCowId] = useState<string | undefined>();
   const [tmpPoint, setTmpPoint] = useState<LatLngExpression | undefined>();
+  const [timeout, setTimeout] = useState(60);
   const [gpsEvents, setGpsEvents] = useState<{ [cowId: string]: GpsEvent }>({
     // '002': {
     //   cowId: "002",
@@ -92,10 +94,16 @@ function HomePage() {
 
   return (
     <>
+      <SettingsWindow 
+        timeout={timeout}
+        setTimeout={setTimeout}
+      />
+
       <CowsTrackerMap 
         gpsEvents={gpsEvents}
         showEventsHistory={showEventsHistory}
         tmpPoint={tmpPoint}
+        timeout={timeout}
       />
 
       {

@@ -55,6 +55,15 @@ const EventsTable = (props: Props) => {
     setPage(0);
   };
 
+  const getColumnValue = (row: GpsEvent, column: Column) => {
+    let value = row[column.id];
+    if (column.id === "timestamp") {
+      const date = new Date(value)
+      value = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    }
+    return value;
+  }
+
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <Toolbar>
@@ -101,7 +110,8 @@ const EventsTable = (props: Props) => {
                     }}
                   >
                     {columns.map((column) => {
-                      const value = row[column.id];
+                      const value = getColumnValue(row, column);
+
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {column.format && typeof value === 'number'
