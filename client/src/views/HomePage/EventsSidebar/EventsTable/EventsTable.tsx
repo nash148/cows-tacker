@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import CloseIcon from '@mui/icons-material/Close';
 import { GpsEvent } from '../../../../common/interfaces/gps-event.interface';
-import { IconButton, Toolbar, Typography } from '@mui/material';
+import { IconButton, Toolbar, Typography, Button, Grid } from '@mui/material';
 import { LatLngExpression } from 'leaflet';
 
 interface Column {
@@ -39,10 +39,11 @@ interface Props {
   cowId: string;
   onClose: () => void;
   setTmpPoint: (point: LatLngExpression) => void;
+  onClickShowRoute: () => void;
 }
 
 const EventsTable = (props: Props) => {
-  const { rows, cowId, onClose, setTmpPoint } = props;
+  const { rows, cowId, onClose, setTmpPoint, onClickShowRoute } = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -66,18 +67,46 @@ const EventsTable = (props: Props) => {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      {/* FIXME: Move all Toolbar content to the parent component */}
       <Toolbar>
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
+        <Grid
+          container
+          direction="row"
+          spacing={1}
         >
-          History of {cowId}
-        </Typography>
-        <IconButton onClick={() => onClose()}>
-          <CloseIcon />
-        </IconButton>
+          <Grid
+            item
+            xs={7}
+          >
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              History of {cowId}
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={4}
+          >
+            <Button
+              size="small"
+              variant="outlined"
+              color="secondary"
+              onClick={onClickShowRoute}
+            >Show Route</Button>
+          </Grid>
+          <Grid
+            item
+            xs={1}
+          >
+            <IconButton onClick={() => onClose()}>
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       </Toolbar>
       <TableContainer sx={{ maxHeight: 640, maxWidth: 440 }}>
         <Table size='small' stickyHeader aria-label="sticky table">
