@@ -12,11 +12,17 @@ interface Props {
   events: GpsEvent[];
   onClose: () => void;
   setTmpPoint: (point: LatLngExpression) => void;
+  showHistoryRoute: (events: GpsEvent[]) => void;
 }
 
 const HistorySidebar = (props: Props) => {
-  const { events, onClose, cowId, setTmpPoint } = props;
+  const { events, onClose, cowId, setTmpPoint, showHistoryRoute } = props;
 
+
+  const onClickShowRoute = () => {
+    showHistoryRoute(events)
+    onClose()
+  }
 
   return (
     <div>
@@ -34,7 +40,7 @@ const HistorySidebar = (props: Props) => {
             >
 
             </Box>
-            <EventsTable setTmpPoint={setTmpPoint} cowId={cowId} rows={events} onClose={onClose} />
+            <EventsTable onClickShowRoute={onClickShowRoute} setTmpPoint={setTmpPoint} cowId={cowId} rows={events} onClose={onClose} />
           </Drawer>
         </>
     </div>

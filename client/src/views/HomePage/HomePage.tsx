@@ -15,6 +15,7 @@ socket.connect()
 
 function HomePage() {
   const [eventsHistory, setEventsHistory] = useState<GpsEvent[] | undefined>();
+  const [cowHistoryRoute, setCowHistoryRoute] = useState<LatLngExpression[] | undefined>();
   const [historyCowId, setHistoryCowId] = useState<string | undefined>();
   const [tmpPoint, setTmpPoint] = useState<LatLngExpression | undefined>();
   const [timeout, setTimeout] = useState(60);
@@ -82,6 +83,12 @@ function HomePage() {
     setHistoryCowId(cowId);
   }
 
+  const showHistoryRoute = (events: GpsEvent[]) => {
+    setCowHistoryRoute(events.filter(event => event.latLong.length > 0).map(event => event.latLong as LatLngExpression).splice(1))
+  }
+
+  const removeHistoryRoute = () => setCowHistoryRoute(undefined);
+
   const onCloseHistory = () => {
     setEventsHistory(undefined);
     setHistoryCowId(undefined);
@@ -104,6 +111,8 @@ function HomePage() {
         showEventsHistory={showEventsHistory}
         tmpPoint={tmpPoint}
         timeout={timeout}
+        cowHistoryRoute={cowHistoryRoute}
+        removeHistoryRoute={removeHistoryRoute}
       />
 
       {
@@ -113,6 +122,7 @@ function HomePage() {
           onClose={onCloseHistory} 
           cowId={historyCowId}
           setTmpPoint={setTmpPoint}
+          showHistoryRoute={showHistoryRoute}
         />
       }
     </>
