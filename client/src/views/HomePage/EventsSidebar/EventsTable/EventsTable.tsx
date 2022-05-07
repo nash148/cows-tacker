@@ -12,7 +12,7 @@ import { GpsEvent } from '../../../../common/interfaces/gps-event.interface';
 import { IconButton, Toolbar, Typography, Button, Grid } from '@mui/material';
 import { LatLngExpression } from 'leaflet';
 
-interface Column {
+interface IColumn {
   id: 'timestamp' | 'tw' | 'battery' | 'counter';
   label: string;
   minWidth?: number;
@@ -20,21 +20,21 @@ interface Column {
   format?: (value: number) => string;
 }
 
-const columns: readonly Column[] = [
+const columns: readonly IColumn[] = [
   { id: 'timestamp', label: 'Timestamp', minWidth: 140 },
   { id: 'tw', label: 'tw', minWidth: 50 },
   { id: 'battery', label: 'Battery', minWidth: 50 },
   { id: 'counter', label: 'Counter', minWidth: 50 },
 ];
 
-interface Data {
+interface IData {
   name: string;
   wt: string;
   battery: number;
   counter: number;
 }
 
-interface Props {
+interface IProps {
   rows: GpsEvent[];
   cowId: string;
   onClose: () => void;
@@ -42,7 +42,7 @@ interface Props {
   onClickShowRoute: () => void;
 }
 
-const EventsTable = (props: Props) => {
+const EventsTable = (props: IProps) => {
   const { rows, cowId, onClose, setTmpPoint, onClickShowRoute } = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -56,7 +56,7 @@ const EventsTable = (props: Props) => {
     setPage(0);
   };
 
-  const getColumnValue = (row: GpsEvent, column: Column) => {
+  const getColumnValue = (row: GpsEvent, column: IColumn) => {
     let value = row[column.id];
     if (column.id === "timestamp") {
       const date = new Date(value)

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, Tooltip, Polyline } from 'react-leaflet';
+import React, { useState, useEffect } from 'react'
+import { MapContainer, TileLayer, Marker, Tooltip, Polyline } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import Typography from '@mui/material/Typography';
 import 'leaflet/dist/leaflet.css';
@@ -7,6 +7,8 @@ import icon from '../../../assets/cow.png';
 import defaultIcon from '../../../assets/marker-icon.png';
 import { GpsEvent } from '../../../common/interfaces/gps-event.interface';
 import { Button } from '@mui/material';
+
+import CowHistoryRoute from './CowHistoryRoute/CowHistoryRoute';
 
 const CowIcon = L.icon({
   iconUrl: icon,
@@ -20,7 +22,7 @@ const DefaultIcon = L.icon({
   iconAnchor: [7, 10]
 });
 
-interface Props {
+interface IProps {
   gpsEvents: { [cowId: string]: GpsEvent },
   showEventsHistory: (cowId: string) => void; 
   tmpPoint: LatLngExpression | undefined;
@@ -29,7 +31,7 @@ interface Props {
   removeHistoryRoute: () => void;
 }
 
-const CowsTrackerMap = (props: Props) => {
+const CowsTrackerMap = (props: IProps) => {
   const { gpsEvents, showEventsHistory, tmpPoint, timeout, cowHistoryRoute, removeHistoryRoute } = props;
   const [center, setCenter] = useState<LatLngExpression>([32.062725, 34.806061]);
   const [warnMapping, setWarnMapping] = useState<{ [cowId: string]: Boolean }>({})
@@ -49,41 +51,6 @@ const CowsTrackerMap = (props: Props) => {
         [event.cowId]: (currDate - event.timestamp) > (timeout * 60000)
       }))
     })
-  }
-
-
-  const getHistoryRouteElements = () => {
-    return (
-        <>
-        {
-          cowHistoryRoute &&
-          <>
-            <Polyline 
-              pathOptions={{ color: 'blue' }}
-              positions={cowHistoryRoute}
-            />
-
-          <Button
-            size="small"
-            variant="contained"
-            style={{position: "absolute", zIndex: 1000}}
-            onClick={removeHistoryRoute}
-          >Remove Route</Button>
-            {
-              cowHistoryRoute.map((coordinate, i) => {
-                return (
-                  <Marker 
-                  key={i} 
-                  icon={ DefaultIcon } 
-                  position={coordinate}
-                  />
-                )
-              })
-            }
-          </>
-        }
-        </>
-    )
   }
   
   useEffect(() => {
@@ -155,7 +122,14 @@ const CowsTrackerMap = (props: Props) => {
           />
         }
 
-        {getHistoryRouteElements()}
+        {
+          cowHistoryRoute &&
+          <CowHistoryRoute 
+            cowHistoryRoute={cowHistoryRoute}
+            removeHistoryRoute={removeHistoryRoute}
+            icon={DefaultIcon}
+          />
+        }
       </MapContainer>
     </>
   )

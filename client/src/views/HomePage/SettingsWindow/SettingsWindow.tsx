@@ -11,12 +11,12 @@ import { Button } from '@mui/material';
 import { useState } from 'react';
 
 
-interface Props {
+interface IProps {
   timeout: number;
   setTimeout: (time: number) => void;
 }
 
-export default function FormDialog(props: Props) {
+export default function FormDialog(props: IProps) {
   const { timeout, setTimeout } = props;
   const [open, setOpen] = React.useState(false);
   const [tmpTime, setTmpTime] = useState(timeout);
