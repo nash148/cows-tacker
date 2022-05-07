@@ -51,6 +51,40 @@ const CowsTrackerMap = (props: Props) => {
     })
   }
 
+
+  const getHistoryRouteElements = () => {
+    return (
+        <>
+        {
+          cowHistoryRoute &&
+          <>
+            <Polyline 
+              pathOptions={{ color: 'blue' }}
+              positions={cowHistoryRoute}
+            />
+
+          <Button
+            size="small"
+            variant="contained"
+            style={{position: "absolute", zIndex: 1000}}
+            onClick={removeHistoryRoute}
+          >Remove Route</Button>
+            {
+              cowHistoryRoute.map((coordinate, i) => {
+                return (
+                  <Marker 
+                  key={i} 
+                  icon={ DefaultIcon } 
+                  position={coordinate}
+                  />
+                )
+              })
+            }
+          </>
+        }
+        </>
+    )
+  }
   
   useEffect(() => {
     initCenter();
@@ -121,34 +155,7 @@ const CowsTrackerMap = (props: Props) => {
           />
         }
 
-        {
-          cowHistoryRoute &&
-          <>
-            <Polyline 
-              pathOptions={{ color: 'blue' }}
-              positions={cowHistoryRoute}
-            />
-
-          <Button
-            size="small"
-            variant="contained"
-            style={{position: "absolute", zIndex: 1000}}
-            onClick={removeHistoryRoute}
-          >Remove Route</Button>
-
-            {
-              cowHistoryRoute.map((coordinate, i) => {
-                return (
-                  <Marker 
-                  key={i} 
-                  icon={ DefaultIcon } 
-                  position={coordinate}
-                  />
-                )
-              })
-            }
-          </>
-        }
+        {getHistoryRouteElements()}
       </MapContainer>
     </>
   )
