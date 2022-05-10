@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Tooltip, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import Typography from '@mui/material/Typography';
 import 'leaflet/dist/leaflet.css';
 import icon from '../../../assets/cow.png';
 import defaultIcon from '../../../assets/marker-icon.png';
 import { GpsEvent } from '../../../common/interfaces/gps-event.interface';
-import { Button } from '@mui/material';
 
 import CowHistoryRoute from './CowHistoryRoute/CowHistoryRoute';
+import FarmPlygon from './FarmPlygon/FarmPolygon';
 
 const CowIcon = L.icon({
   iconUrl: icon,
@@ -34,6 +34,13 @@ interface IProps {
 const CowsTrackerMap = (props: IProps) => {
   const { gpsEvents, showEventsHistory, tmpPoint, timeout, cowHistoryRoute, removeHistoryRoute } = props;
   const [center, setCenter] = useState<LatLngExpression>([32.062725, 34.806061]);
+  // TODO Get the polygon from the server, and update on change
+  const [farmPolygon, setFarmPolygon] = useState<LatLngExpression[]>([
+    [32.072538244831925, 34.80245590209962],
+    [32.046787878141664, 34.86597061157227],
+    [32.07762926680948, 34.861164093017585],
+    [32.089555693788576, 34.8318099975586]
+  ])
   const [warnMapping, setWarnMapping] = useState<{ [cowId: string]: Boolean }>({})
   const [currDate, setCurrDate] = useState(Date.now());
 
@@ -130,6 +137,11 @@ const CowsTrackerMap = (props: IProps) => {
             icon={DefaultIcon}
           />
         }
+
+        <FarmPlygon 
+          polygon={farmPolygon}
+          setPolygon={setFarmPolygon}
+        />
       </MapContainer>
     </>
   )
