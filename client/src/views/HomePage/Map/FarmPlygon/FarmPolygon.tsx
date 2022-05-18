@@ -20,8 +20,8 @@ const FarmPolygon = (props: IProps) => {
 
     const onCreated = (e: any) => {
         // TODO Alow to create only one polygon
-        console.log('created', e.layer.getLatLngs())
-        setPolygon(e.layer.getLatLngs())
+        // console.log('created', e.layer.getLatLngs())
+        // setPolygon(e.layer.getLatLngs())
         
     }
 
