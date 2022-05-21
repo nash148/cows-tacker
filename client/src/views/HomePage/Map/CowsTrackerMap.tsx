@@ -77,7 +77,7 @@ const CowsTrackerMap = (props: IProps) => {
   
   return (
     <>
-      <MapContainer style={{ height: "100vh", width: "100%" }} center={center} zoom={13}>
+      <MapContainer style={{ height: "100vh", width: "100%" }} center={center} zoom={12}>
 
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

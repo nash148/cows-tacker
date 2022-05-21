@@ -1,10 +1,8 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import Collapse from '@mui/material/Collapse';
 
 interface IProps {
     content: string;
@@ -12,23 +10,26 @@ interface IProps {
 
 const ActionAlert = (props: IProps) => {
   const { content } = props;
+  const [open, setOpen] = useState(true)
 
   return (
-    <div
-    >
-      <Alert 
-        style={{
-          zIndex: 99,
-          position: 'absolute',
-        }}
-        severity="error"
-        onClose={() => {}}
-      >
-        <AlertTitle> Error </AlertTitle>
-        This is a success alert — check it out!
+    <>
+      <Collapse in={open}>
+        <Alert 
+          sx={{
+            zIndex: 1000,
+            position: 'absolute',
+            bottom: 50,
+          }}
+          severity="error"
+          onClose={() => setOpen(false)}
 
-      </Alert>
-    </div>
+        >
+          <AlertTitle> Note! </AlertTitle>
+          {content}
+        </Alert>
+      </Collapse>
+    </>
   );
 }
 

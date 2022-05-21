@@ -108,6 +108,10 @@ function HomePage() {
         setTimeout={setTimeout}
       />
 
+      <Alert
+        content='Cow 23 - Theft Alert!'
+      />
+
       <CowsTrackerMap 
         gpsEvents={gpsEvents}
         showEventsHistory={showEventsHistory}
@@ -128,9 +132,6 @@ function HomePage() {
         />
       }
 
-      <Alert
-        content='Cow #23 is alerted'
-      />
     </>
   )
 };
