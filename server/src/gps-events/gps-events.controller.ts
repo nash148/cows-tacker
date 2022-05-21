@@ -10,7 +10,7 @@ import {
 import { GpsEvent } from './interfaces/gps-event.interface';
 import { GpsEventsService } from './gps-events.service';
 import { CreateGpsEventDto } from './dto/create-gps-event.dto';
-
+import { TheftAlertDto } from './dto/theft-alert.dto';
 
 @Controller('gps-events')
 export class GpsEventsController {
@@ -41,9 +41,19 @@ export class GpsEventsController {
     return this.gpsEventsService.create(createGpsEvent);
   }
 
+  @Post('theft-alert')
+  postAlert(@Body() alert: TheftAlertDto): Promise<string> {
+    return this.gpsEventsService.postAlert(alert.cowId);
+  }
+
   @Delete(':id')
   delete(@Param() id: string): Promise<GpsEvent> {
     return this.gpsEventsService.delete(id);
+  }
+
+  @Delete('history-by-cow-id/:cowId')
+  deleteHistoryByCowId(@Param('cowId') cowId: string): Promise<void> {
+    return this.gpsEventsService.deleteHistoryByCowId(cowId);
   }
 
   @Put(':id')

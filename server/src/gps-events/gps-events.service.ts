@@ -39,9 +39,19 @@ export class GpsEventsService {
     return await this.gpsEventModel.findByIdAndRemove(id);
   }
 
+  async deleteHistoryByCowId(cowId: string): Promise<void> {
+    await this.gpsEventModel.deleteMany({ cowId, });
+  }
+
   async update(id: string, gpsEvent: GpsEvent): Promise<GpsEvent> {
     return await this.gpsEventModel.findByIdAndUpdate(id, gpsEvent, { new: true });
   }
+
+  async postAlert(cowId: string): Promise<string> {
+    this.emitAlert(cowId)
+    return cowId;
+  }
+
 
   setSocketServer(server: Server): void {
     this.socketServer = server;
@@ -52,6 +62,15 @@ export class GpsEventsService {
     if (this.socketServer) {
       this.logger.log(`Emit gps event for ${event.cowId}`);
       this.socketServer.emit('gps-event', event);
+    } else {
+      this.logger.warn('No socket server on emit gps event')
+    } 
+  }
+
+  emitAlert(cowId: string): void {
+    if (this.socketServer) {
+      this.logger.log(`Emit gps alert for ${cowId}`);
+      this.socketServer.emit('theft-alert', cowId);
     } else {
       this.logger.warn('No socket server on emit gps event')
     } 

@@ -1,12 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, Tooltip, Polyline } from 'react-leaflet';
+import React, { useState, useEffect } from 'react'
+import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import Typography from '@mui/material/Typography';
 import 'leaflet/dist/leaflet.css';
 import icon from '../../../assets/cow.png';
 import defaultIcon from '../../../assets/marker-icon.png';
 import { GpsEvent } from '../../../common/interfaces/gps-event.interface';
-import { Button } from '@mui/material';
+
+import CowHistoryRoute from './CowHistoryRoute/CowHistoryRoute';
+import FarmPlygon from './FarmPlygon/FarmPolygon';
 
 const CowIcon = L.icon({
   iconUrl: icon,
@@ -20,7 +22,7 @@ const DefaultIcon = L.icon({
   iconAnchor: [7, 10]
 });
 
-interface Props {
+interface IProps {
   gpsEvents: { [cowId: string]: GpsEvent },
   showEventsHistory: (cowId: string) => void; 
   tmpPoint: LatLngExpression | undefined;
@@ -29,9 +31,19 @@ interface Props {
   removeHistoryRoute: () => void;
 }
 
-const CowsTrackerMap = (props: Props) => {
+const CowsTrackerMap = (props: IProps) => {
   const { gpsEvents, showEventsHistory, tmpPoint, timeout, cowHistoryRoute, removeHistoryRoute } = props;
-  const [center, setCenter] = useState<LatLngExpression>([32.062725, 34.806061]);
+  const [center, setCenter] = useState<LatLngExpression>([31.63072930365132, 34.91472244262696]);
+  // TODO Get the polygon from the server, and update on change
+  const [farmPolygon, setFarmPolygon] = useState<LatLngExpression[]>([
+    [31.660687350060968, 34.869918823242195],
+    [31.650897245684263, 34.92038726806641],
+    [31.63072930365132, 34.91472244262696],
+    [31.620789868536235, 34.86511230468751],
+    [31.620789868536235, 34.86511230468751],
+    [31.64592873854548, 34.85979080200196],
+    [31.657326684219576,34.84811782836915]
+  ])
   const [warnMapping, setWarnMapping] = useState<{ [cowId: string]: Boolean }>({})
   const [currDate, setCurrDate] = useState(Date.now());
 
@@ -50,7 +62,6 @@ const CowsTrackerMap = (props: Props) => {
       }))
     })
   }
-
   
   useEffect(() => {
     initCenter();
@@ -66,7 +77,7 @@ const CowsTrackerMap = (props: Props) => {
   
   return (
     <>
-      <MapContainer style={{ height: "100vh", width: "100%" }} center={center} zoom={13}>
+      <MapContainer style={{ height: "100vh", width: "100%" }} center={center} zoom={12}>
 
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -123,32 +134,17 @@ const CowsTrackerMap = (props: Props) => {
 
         {
           cowHistoryRoute &&
-          <>
-            <Polyline 
-              pathOptions={{ color: 'blue' }}
-              positions={cowHistoryRoute}
-            />
-
-          <Button
-            size="small"
-            variant="contained"
-            style={{position: "absolute", zIndex: 1000}}
-            onClick={removeHistoryRoute}
-          >Remove Route</Button>
-
-            {
-              cowHistoryRoute.map((coordinate, i) => {
-                return (
-                  <Marker 
-                  key={i} 
-                  icon={ DefaultIcon } 
-                  position={coordinate}
-                  />
-                )
-              })
-            }
-          </>
+          <CowHistoryRoute 
+            cowHistoryRoute={cowHistoryRoute}
+            removeHistoryRoute={removeHistoryRoute}
+            icon={DefaultIcon}
+          />
         }
+
+        <FarmPlygon 
+          polygon={farmPolygon}
+          setPolygon={setFarmPolygon}
+        />
       </MapContainer>
     </>
   )

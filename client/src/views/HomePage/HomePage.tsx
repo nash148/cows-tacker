@@ -8,6 +8,8 @@ import HistorySidebar from './EventsSidebar/HistorySidebar';
 import SettingsWindow from './SettingsWindow/SettingsWindow';
 import { LatLngExpression } from 'leaflet';
 
+import Alert from '../../components/Alert/Alert';
+
 const SERVER_URL = process.env.REACT_APP_SERVER_URL as string;
 
 const socket = io(SERVER_URL, { transports : ['websocket'] })
@@ -19,6 +21,7 @@ function HomePage() {
   const [historyCowId, setHistoryCowId] = useState<string | undefined>();
   const [tmpPoint, setTmpPoint] = useState<LatLngExpression | undefined>();
   const [timeout, setTimeout] = useState(60);
+  const [theftAlerts, setTheftAlerts] = useState<string[]>(['56']);
   const [gpsEvents, setGpsEvents] = useState<{ [cowId: string]: GpsEvent }>({
     // '002': {
     //   cowId: "002",
@@ -77,6 +80,15 @@ function HomePage() {
     })
   }
 
+  const startListenToAlerts = () => {
+    socket.on('theft-alert', (cowId: string) => {
+        setTheftAlerts(prevState => ([
+          ...prevState,
+          cowId,
+        ]))
+      })
+  }
+
   const showEventsHistory = async (cowId: string) => {
     const res = await GpsEventsApi.getByCowId(cowId);
     setEventsHistory(res);
@@ -97,6 +109,7 @@ function HomePage() {
   useEffect(() => {
     updateLastEvents();
     startListenToGpsEvents();
+    startListenToAlerts();
   }, [])
 
   return (
@@ -105,6 +118,16 @@ function HomePage() {
         timeout={timeout}
         setTimeout={setTimeout}
       />
+
+      {
+        theftAlerts.length > 0 &&
+          theftAlerts.map(cowId => (
+            <Alert
+              content={`Cow ${cowId} - Theft Alert!`}
+            />
+          ))
+      }
+
 
       <CowsTrackerMap 
         gpsEvents={gpsEvents}
@@ -125,6 +148,7 @@ function HomePage() {
           showHistoryRoute={showHistoryRoute}
         />
       }
+
     </>
   )
 };

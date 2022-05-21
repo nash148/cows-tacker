@@ -7,7 +7,7 @@ import EventsTable from './EventsTable/EventsTable';
 import { GpsEvent } from '../../../common/interfaces/gps-event.interface';
 import { LatLngBoundsExpression, LatLngExpression } from 'leaflet';
 
-interface Props {
+interface IProps {
   cowId: string;
   events: GpsEvent[];
   onClose: () => void;
@@ -15,7 +15,7 @@ interface Props {
   showHistoryRoute: (events: GpsEvent[]) => void;
 }
 
-const HistorySidebar = (props: Props) => {
+const HistorySidebar = (props: IProps) => {
   const { events, onClose, cowId, setTmpPoint, showHistoryRoute } = props;
 
 
