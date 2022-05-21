@@ -14,13 +14,13 @@ const FarmPolygon = (props: IProps) => {
 
     const onEdited = (e: any) => {
         // TODO Update the original polygon
-        console.log('edited', e.layers._layers['72'].getLatLngs())
-        setPolygon(e.layers._layers['72'].getLatLngs()) 
+        // console.log('edited', e.layers._layers['72'].getLatLngs())
+        // setPolygon(e.layers._layers['72'].getLatLngs()) 
     }
 
     const onCreated = (e: any) => {
         // TODO Alow to create only one polygon
-        // console.log('created', e.layer.getLatLngs())
+        console.log('created', e.layer.getLatLngs())
         // setPolygon(e.layer.getLatLngs())
         
     }

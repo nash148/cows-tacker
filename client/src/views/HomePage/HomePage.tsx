@@ -8,6 +8,8 @@ import HistorySidebar from './EventsSidebar/HistorySidebar';
 import SettingsWindow from './SettingsWindow/SettingsWindow';
 import { LatLngExpression } from 'leaflet';
 
+import Alert from '../../components/Alert/Alert';
+
 const SERVER_URL = process.env.REACT_APP_SERVER_URL as string;
 
 const socket = io(SERVER_URL, { transports : ['websocket'] })
@@ -125,6 +127,10 @@ function HomePage() {
           showHistoryRoute={showHistoryRoute}
         />
       }
+
+      <Alert
+        content='Cow #23 is alerted'
+      />
     </>
   )
 };
