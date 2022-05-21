@@ -51,6 +51,11 @@ export class GpsEventsController {
     return this.gpsEventsService.delete(id);
   }
 
+  @Delete('history-by-cow-id/:cowId')
+  deleteHistoryByCowId(@Param('cowId') cowId: string): Promise<void> {
+    return this.gpsEventsService.deleteHistoryByCowId(cowId);
+  }
+
   @Put(':id')
   update(@Body() updateGpsEventDto: CreateGpsEventDto, @Param('id') id: string): Promise<GpsEvent> {
     return this.gpsEventsService.update(id, updateGpsEventDto);

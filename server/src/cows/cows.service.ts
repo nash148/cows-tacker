@@ -18,7 +18,7 @@ export class CowsService {
   async create(cow: Cow): Promise<Cow> {
     return await new this.cowModel(cow).save();
   }
-  
+
   async delete(id: string): Promise<Cow> {
     return await this.cowModel.findByIdAndRemove(id);
   }
