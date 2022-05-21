@@ -21,6 +21,7 @@ function HomePage() {
   const [historyCowId, setHistoryCowId] = useState<string | undefined>();
   const [tmpPoint, setTmpPoint] = useState<LatLngExpression | undefined>();
   const [timeout, setTimeout] = useState(60);
+  const [theftAlerts, setTheftAlerts] = useState<string[]>(['56']);
   const [gpsEvents, setGpsEvents] = useState<{ [cowId: string]: GpsEvent }>({
     // '002': {
     //   cowId: "002",
@@ -79,6 +80,15 @@ function HomePage() {
     })
   }
 
+  const startListenToAlerts = () => {
+    socket.on('theft-alert', (cowId: string) => {
+        setTheftAlerts(prevState => ([
+          ...prevState,
+          cowId,
+        ]))
+      })
+  }
+
   const showEventsHistory = async (cowId: string) => {
     const res = await GpsEventsApi.getByCowId(cowId);
     setEventsHistory(res);
@@ -99,6 +109,7 @@ function HomePage() {
   useEffect(() => {
     updateLastEvents();
     startListenToGpsEvents();
+    startListenToAlerts();
   }, [])
 
   return (
@@ -108,9 +119,15 @@ function HomePage() {
         setTimeout={setTimeout}
       />
 
-      <Alert
-        content='Cow 23 - Theft Alert!'
-      />
+      {
+        theftAlerts.length > 0 &&
+          theftAlerts.map(cowId => (
+            <Alert
+              content={`Cow ${cowId} - Theft Alert!`}
+            />
+          ))
+      }
+
 
       <CowsTrackerMap 
         gpsEvents={gpsEvents}
