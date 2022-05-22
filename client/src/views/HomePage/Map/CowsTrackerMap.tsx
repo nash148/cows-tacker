@@ -33,16 +33,16 @@ interface IProps {
 
 const CowsTrackerMap = (props: IProps) => {
   const { gpsEvents, showEventsHistory, tmpPoint, timeout, cowHistoryRoute, removeHistoryRoute } = props;
-  const [center, setCenter] = useState<LatLngExpression>([31.63072930365132, 34.91472244262696]);
+  const [center, setCenter] = useState<LatLngExpression>([31.374231, 34.594746]);
   // TODO Get the polygon from the server, and update on change
   const [farmPolygon, setFarmPolygon] = useState<LatLngExpression[]>([
-    [31.660687350060968, 34.869918823242195],
-    [31.650897245684263, 34.92038726806641],
-    [31.63072930365132, 34.91472244262696],
-    [31.620789868536235, 34.86511230468751],
-    [31.620789868536235, 34.86511230468751],
-    [31.64592873854548, 34.85979080200196],
-    [31.657326684219576,34.84811782836915]
+    [31.37562347455115, 34.543075561523445],
+    [31.36125952201294, 34.761772155761726],
+    [31.293807563940845, 34.77172851562501],
+    [31.272388797564815, 34.74014282226563],
+    [31.273855991548853, 34.65534210205079],
+    [31.27004123972693, 34.50531005859376],
+    [31.305835148208434, 34.55783843994141]
   ])
   const [warnMapping, setWarnMapping] = useState<{ [cowId: string]: Boolean }>({})
   const [currDate, setCurrDate] = useState(Date.now());
